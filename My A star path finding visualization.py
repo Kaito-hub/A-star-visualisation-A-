@@ -18,14 +18,6 @@ black = (0,0,0)
 purple = (128,0,128)
 screen.fill(white)
 
-font = pygame.font.Font("freesansbold.ttf",10)
-START = font.render("S",True,black,white)
-FINISH = font.render("S",True,black,white)
-START_RECT = START.get_rect()
-FINISH_RECT = FINISH.get_rect()
-
-
-
 total_rows = 25
 width = win_size // total_rows #width of the single block
 
@@ -74,15 +66,13 @@ class Spot:
     def __lt__(self,other):
         return False
             
-    
-
 def make_grid():
     grid = []
     for i in range(total_rows):
         grid.append([])
         for j in range(total_rows):
-            spot = Spot(i,j)
-            grid[i].append(spot) #for this loop appending for i row
+            spot = Spot(i,j) #We are storing the class and its instances into the list so we can access them individually
+            grid[i].append(spot) #for this loop appending for i'th row
 
     return grid
 
@@ -121,7 +111,7 @@ def the_path(came_from,current,draw):
 def algorithm(draw,grid,start,end):
     count = 0
     open_set = PriorityQueue()
-    open_set.put((0,count, start))
+    open_set.put((0,count, start)) #The numbers before spot represent the priority of the spot
     came_from = {}
     g_score = {spot: float("inf") for row in grid for spot in row}
     g_score[start] = 0
@@ -135,7 +125,7 @@ def algorithm(draw,grid,start,end):
             if event.type == pygame.QUIT:
                 pygame.quit()
 
-        current = open_set.get()[2]
+        current = open_set.get()[2] #Getting the spot with the least f_score
         open_set_hash.remove(current)
 
         if current == end:
@@ -147,7 +137,7 @@ def algorithm(draw,grid,start,end):
         for neighbor in current.neighbors:
             temp_g_score = g_score[current] + 1
 
-            if temp_g_score < g_score[neighbor]:
+            if temp_g_score < g_score[neighbor]: #G_Score it would require to get to the neighbor via current
                 came_from[neighbor] = current
                 g_score[neighbor] = temp_g_score
                 f_score[neighbor] = temp_g_score + heuristic(neighbor, end)
@@ -164,9 +154,6 @@ def algorithm(draw,grid,start,end):
 
     return False
 
-
-    
-    
 start = None
 end = None
 
